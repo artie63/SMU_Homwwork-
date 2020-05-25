@@ -1,0 +1,294 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# # WeatherPy
+# ----
+# 
+# #### Note
+# * Instructions have been included for each segment. You do not have to follow them exactly, but they are included to help you think through the steps.
+
+# In[19]:
+
+
+# Dependencies and Setup
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+import requests
+import time
+from scipy.stats import linregress
+
+# Import API key
+from api_keys import weather_api_key
+
+# Incorporated citipy to determine city based on latitude and longitude
+from citipy import citipy
+
+# Output File (CSV)
+output_data_file = "cities.csv"
+
+# Range of latitudes and longitudes
+lat_range = (-90, 90)
+lng_range = (-180, 180)
+
+
+# ## Generate Cities List
+
+# In[20]:
+
+
+# List for holding lat_lngs and cities
+lat_lngs = []
+cities = []
+
+# Create a set of random lat and lng combinations
+lats = np.random.uniform(lat_range[0], lat_range[1], size=1500)
+lngs = np.random.uniform(lng_range[0], lng_range[1], size=1500)
+lat_lngs = zip(lats, lngs)
+
+# Identify nearest city for each lat, lng combination
+for lat_lng in lat_lngs:
+    city = citipy.nearest_city(lat_lng[0], lat_lng[1]).city_name
+    
+    # If the city is unique, then add it to a our cities list
+    if city not in cities:
+        cities.append(city)
+
+# Print the city count to confirm sufficient count
+len(cities)
+
+
+# ### Perform API Calls
+# * Perform a weather check on each city using a series of successive API calls.
+# * Include a print log of each city as it'sbeing processed (with the city number and city name).
+# 
+
+# In[21]:
+
+
+firstCity = cities[5]
+firstCity
+        
+
+
+# In[22]:
+
+
+units = "imperial"
+url = f"http://api.openweathermap.org/data/2.5/weather?q={firstCity}&appid={weather_api_key}&units={units}"
+
+url
+
+
+# In[23]:
+
+
+response = requests.get(url).json()
+pprint(response)
+
+
+# In[24]:
+
+
+response["clouds"]["all"]
+
+
+# In[5]:
+
+
+
+
+
+# In[26]:
+
+
+for city in cities:
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={weather_api_key}&units={units}"
+    
+    try:
+        response = requests.get(url).json()
+    
+        code = response["cod"]
+
+        if code == 200:  
+            citiesFound.append(city)
+            lats.append(response["coord"]["lat"])
+            longs.append(response["coord"]["lon"])
+            temps.append(response["main"]["temp"])
+            humids.append(response["main"]["humidity"])
+            pressures.append(response["main"]["pressure"])
+
+            winds.append(response["wind"]["speed"])
+            clouds.append(response["clouds"]["all"])
+
+        if counter % 50 == 0:
+            print(counter)
+    
+    except Exception as e:
+        print(e)
+    
+    counter += 1
+    time.sleep(1)
+
+
+# In[27]:
+
+
+counter
+
+
+# ### Convert Raw Data to DataFrame
+# * Export the city data into a .csv.
+# * Display the DataFrame
+
+# ## Inspect the data and remove the cities where the humidity > 100%.
+# ----
+# Skip this step if there are no cities that have humidity > 100%. 
+
+# In[6]:
+
+
+
+
+
+# In[7]:
+
+
+#  Get the indices of cities that have humidity over 100%.
+
+
+# In[8]:
+
+
+# Make a new DataFrame equal to the city data to drop all humidity outliers by index.
+# Passing "inplace=False" will make a copy of the city_data DataFrame, which we call "clean_city_data".
+
+
+# In[9]:
+
+
+# Extract relevant fields from the data frame
+
+
+# Export the City_Data into a csv
+
+
+# ## Plotting the Data
+# * Use proper labeling of the plots using plot titles (including date of analysis) and axes labels.
+# * Save the plotted figures as .pngs.
+
+# ## Latitude vs. Temperature Plot
+
+# In[10]:
+
+
+
+
+
+# ## Latitude vs. Humidity Plot
+
+# In[11]:
+
+
+
+
+
+# ## Latitude vs. Cloudiness Plot
+
+# In[12]:
+
+
+
+
+
+# ## Latitude vs. Wind Speed Plot
+
+# In[13]:
+
+
+
+
+
+# ## Linear Regression
+
+# In[14]:
+
+
+# OPTIONAL: Create a function to create Linear Regression plots
+
+
+# In[15]:
+
+
+# Create Northern and Southern Hemisphere DataFrames
+
+
+# ####  Northern Hemisphere - Max Temp vs. Latitude Linear Regression
+
+# In[16]:
+
+
+
+
+
+# ####  Southern Hemisphere - Max Temp vs. Latitude Linear Regression
+
+# In[17]:
+
+
+
+
+
+# ####  Northern Hemisphere - Humidity (%) vs. Latitude Linear Regression
+
+# In[18]:
+
+
+
+
+
+# ####  Southern Hemisphere - Humidity (%) vs. Latitude Linear Regression
+
+# In[19]:
+
+
+
+
+
+# ####  Northern Hemisphere - Cloudiness (%) vs. Latitude Linear Regression
+
+# In[20]:
+
+
+
+
+
+# ####  Southern Hemisphere - Cloudiness (%) vs. Latitude Linear Regression
+
+# In[21]:
+
+
+
+
+
+# ####  Northern Hemisphere - Wind Speed (mph) vs. Latitude Linear Regression
+
+# In[22]:
+
+
+
+
+
+# ####  Southern Hemisphere - Wind Speed (mph) vs. Latitude Linear Regression
+
+# In[23]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
