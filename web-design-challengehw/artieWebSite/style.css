@@ -1,0 +1,32 @@
+.card_header_override {
+    /* font-size: 60px; */
+    font-weight: bold;
+    /* background-color: white; */
+}
+
+.image_inline {
+    width: 100%;
+}
+
+.image_fit {
+    height: fit-content;
+}
+
+.footer_override {
+    margin: 0px;
+    text-align: center;
+}
+
+.subtitle {
+    font-style: italic;
+    text-align: center;
+}
+
+.image_clickable {
+    cursor: pointer;
+}
+
+.image_border {
+    border: 5px solid seagreen;
+    padding: 5px;
+}
